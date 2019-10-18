@@ -1,12 +1,13 @@
-FROM node
+FROM node as build
 
 RUN npx create-react-app kolesnik
 
 WORKDIR /kolesnik
 
 RUN yarn build
-RUN yarn global add serve
 
-EXPOSE 5000
+FROM nginx
 
-CMD serve -s build
+COPY --from=build /kolesnik/build /usr/share/nginx/html
+
+EXPOSE 80:80
